@@ -1,0 +1,6 @@
+#package dependencies
+streamlit
+alpaca-trade-api 
+pandas 
+termcolor
+numpy
