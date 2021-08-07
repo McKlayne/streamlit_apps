@@ -55,7 +55,7 @@ def ma_backtest(data, window, strategy='single', sellShort=False, slippage = 0.0
 
     #metrics for calculating return   
     data['LagPrice'] = data['close'].shift(1)
-    data['PctChange'] = (data['close'] - data['LagPrice']) / data['LagPrice']
+    data['PctChange'] = ((data['close'] - data['LagPrice']) / data['LagPrice']).shift(-1)
 
     #variables to capture the buy and sell prices  
     buyPrice = []
