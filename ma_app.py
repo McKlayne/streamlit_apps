@@ -115,7 +115,7 @@ def plot(data,windows,strategy):
 st.title("Moving Average Analysis")
 
 #inputs from user
-ticker = st.sidebar.text_input("Please enter a ticker symbol","SPY")
+ticker = st.sidebar.text_input("Please enter a ticker symbol","SPY").upper()
 days = st.sidebar.number_input("Please enter the number of days of data you would like",30)
 strategy = st.sidebar.radio('Select Strategy', ['Single Moving Average','Moving Average Crossover'])
 
@@ -145,13 +145,13 @@ sma_trade = ma_backtest(data, window, strategy, sellShort)
 plot(sma_trade, window, strategy)
 st.pyplot()
 
-strategy_return = sma_trade.Cumulative[-1]
+strategy_return = sma_trade.Cumulative.iloc[-2]
 buy_hold = ((sma_trade.close[-1]-sma_trade.close[0])/sma_trade.close[0])
 
 if strategy_return > buy_hold:
-    st.success('Percent return on this strategy would have been {:.2%}'.format(sma_trade.Cumulative[-1]))
-    st.info('Percent return on buy and hold would have been {:.2%}'.format((sma_trade.close[-1]-sma_trade.close[0])/sma_trade.close[0]))
+    st.success('Percent return on this strategy would have been {:.2%}'.format(strategy_return))
+    st.info('Percent return on buy and hold would have been {:.2%}'.format(buy_hold))
 else:
-    st.warning('Percent return on this strategy would have been {:.2%}'.format(sma_trade.Cumulative[-1]))
-    st.success('Percent return on buy and hold would have been {:.2%}'.format((sma_trade.close[-1]-sma_trade.close[0])/sma_trade.close[0]))
+    st.warning('Percent return on this strategy would have been {:.2%}'.format(strategy_return))
+    st.success('Percent return on buy and hold would have been {:.2%}'.format(buy_hold))
 st.dataframe(data)
