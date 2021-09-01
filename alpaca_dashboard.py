@@ -1,11 +1,10 @@
-from alpaca_trade_api.rest import Orders
 import pandas as pd
 import matplotlib.pyplot as plt 
 import pytz
 import datetime as dt
 from datetime import date
 import streamlit as st
-st.set_option('deprecation.showPyplotGlobalUse', False)
+#st.set_option('deprecation.showPyplotGlobalUse', False)
 import numpy as np
 import os
 import alpaca_trade_api as tradeapi
@@ -265,52 +264,51 @@ def analyze_portfolio(history, percentile=.95, varDaysHorizon=30):
     return(results)
  
 st.title("Alpaca Dashboard")
-# env = st.sidebar.text_input('Please enter type of enviornment','paper')
-
-# if env == 'paper':
-#     url = "https://paper-api.alpaca.markets"
-# else:
-#     url = "https://api.alpaca.markets"
-
-# key = st.sidebar.text_input('Please enter your Alpaca Key','PK5S94NMW8O14WQPAKIT')
-# secret = st.sidebar.text_input('Please enter your Alpaca Secret','CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h')
-
 account = st.sidebar.radio('Select the Account to pull', ['Paper', 'Live'])
 
 if account == 'Paper':
     url = "https://paper-api.alpaca.markets"
-    key = 'PK5S94NMW8O14WQPAKIT'
-    secret = 'CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h'
-    startingDate = '2021-02-04'
+else:
+    url = "https://api.alpaca.markets"
+
+key = st.sidebar.text_input('Please enter your Alpaca Key','PK5S94NMW8O14WQPAKIT')
+secret = st.sidebar.text_input('Please enter your Alpaca Secret','CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h')
+startingDate = st.sidebar.date_input('Please enter the date you would like to begin pulling trade history from')
+
+# if account == 'Paper':
+#     url = "https://paper-api.alpaca.markets"
+#     key = 'PK5S94NMW8O14WQPAKIT'
+#     secret = 'CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h'
+#     startingDate = '2021-02-04'
 # elif account == 'Live':
     
 os.environ["APCA_API_BASE_URL"] = url
 api = tradeapi.REST(key, secret, api_version='v2')
 
 data = get_orders(api)
-history = get_portfolio_history(api, startingDate)
+history = get_portfolio_history(api, str(startingDate))
 portfolio_analysis = analyze_portfolio(history)
 positions = get_current_positions(api)
 
 # note, the current pct_gain_loss from portfolio history does not work. RIP
-st.write('Account Equity')
+st.header('Account Equity')
 equityChange = positions['Change Today ($)'].sum()
-st.write(f'Change in Account equity today is {equityChange / history.equity.iloc[-2] * 100}%')
+st.subheader(f'Change in Account equity today is {equityChange / history.equity.iloc[-2] * 100}%')
 plt.plot(history.equity, label=f'{account} equity')
 st.pyplot()
 
-st.write('Portfolio statistics')
+st.header('Portfolio statistics')
 st.dataframe(portfolio_analysis)
 
-st.write('Current Positions')
+st.header('Current Positions')
 st.dataframe(positions)
 
 ticker = st.selectbox('Select a ticker from the trading history', data.symbol.unique())
-st.write(f'Analysis of trades for {ticker}')
+st.header(f'Analysis of trades for {ticker}')
 tickerResults = analyze_trades(api, data, ticker)
 st.dataframe(tickerResults[0])
 plot = plot_trades(ticker, tickerResults[1])
 st.pyplot()
 
-st.write(f'All trade details for {ticker}')
+st.header(f'All trade details for {ticker}')
 st.dataframe(tickerResults[1][['symbol', 'transaction_time', 'price', 'qty', 'side', 'profit']])
