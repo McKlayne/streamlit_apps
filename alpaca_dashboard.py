@@ -113,6 +113,8 @@ def get_portfolio_history(api, startingDate):
     '''
     history = api.get_portfolio_history(period='2500D', timeframe='1D').df.reset_index()
 
+    print(history.head())
+
     # convert transaction_time to date
     history['timestamp'] = pd.to_datetime(history['timestamp'], format="%Y-%m-%d")
     # remove time
@@ -302,13 +304,13 @@ st.dataframe(portfolio_analysis)
 
 st.header('Current Positions')
 st.dataframe(positions)
-
+st.header(f'Analysis of trades by Ticker')
 ticker = st.selectbox('Select a ticker from the trading history', data.symbol.unique())
-st.header(f'Analysis of trades for {ticker}')
+st.subheader(f'Analysis of trades for {ticker}')
 tickerResults = analyze_trades(api, data, ticker)
 st.dataframe(tickerResults[0])
 plot = plot_trades(ticker, tickerResults[1])
 st.pyplot()
 
-st.header(f'All trade details for {ticker}')
+st.subheader(f'All trade details for {ticker}')
 st.dataframe(tickerResults[1][['symbol', 'transaction_time', 'price', 'qty', 'side', 'profit']])
