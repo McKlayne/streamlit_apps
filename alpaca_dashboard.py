@@ -273,7 +273,7 @@ else:
 
 key = st.sidebar.text_input('Please enter your Alpaca Key','PK5S94NMW8O14WQPAKIT')
 secret = st.sidebar.text_input('Please enter your Alpaca Secret','CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h')
-startingDate = st.sidebar.date_input('Please enter the date you would like to begin pulling trade history from','2021-02-04')
+startingDate = st.sidebar.date_input('Please enter the date you would like to begin pulling trade history from'.datetime(2021, 2, 4))
 
 # if account == 'Paper':
 #     url = "https://paper-api.alpaca.markets"
