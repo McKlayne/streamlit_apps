@@ -80,7 +80,7 @@ def get_orders(api):
                 profit = 0
 
         side      = trades['side'][index]
-        filledQty = int(trades['cum_qty'][index]) * sign[side]
+        filledQty = float(trades['cum_qty'][index]) * sign[side]
         qty       = qty + filledQty
         price     = float(trades['price'][index])
         pl        = filledQty * price
