@@ -251,7 +251,7 @@ def analyze_portfolio(history, percentile=.95, varDaysHorizon=30):
     # VaR
     sorted_history = history['profit_loss_pct'].sort_values()
     percentile_value = round(len(sorted_history) * (1 - (percentile / 100)))
-    VaR = sorted_history[percentile_value] * np.sqrt(varDaysHorizon)
+    # VaR = sorted_history[percentile_value] * np.sqrt(varDaysHorizon)
     
     # max drawdown
     peak = history.equity.cummax()
@@ -259,7 +259,7 @@ def analyze_portfolio(history, percentile=.95, varDaysHorizon=30):
     max_daily_drawdown = daily_drawdown.cummin().iloc[-1]
     results = pd.DataFrame({
         'Beta':beta,
-        f'VaR ({varDaysHorizon} day horizon)':VaR,
+        # f'VaR ({varDaysHorizon} day horizon)':VaR,
         'Max Draw':max_daily_drawdown
     }, index=[history.index[-1]])
     
@@ -273,8 +273,8 @@ if account == 'Paper':
 else:
     url = "https://api.alpaca.markets"
 
-key = st.sidebar.text_input('Please enter your Alpaca Key','PK5S94NMW8O14WQPAKIT')
-secret = st.sidebar.text_input('Please enter your Alpaca Secret','CHOxjFZZlwOz8s5lNRs0LzeQew5bk63ZMrorCB7h')
+key = st.sidebar.text_input('Please enter your Alpaca Key','PKY1LYNDNCTAT6KW7OD6')
+secret = st.sidebar.text_input('Please enter your Alpaca Secret','K3FkOjHgbzxWQ16cBMrxHL66GYeptFsZzS5VHP18')
 startingDate = st.sidebar.date_input('Please enter the date you would like to begin pulling trade history from',dt.datetime(2021,1,1))
 
 # if account == 'Paper':
